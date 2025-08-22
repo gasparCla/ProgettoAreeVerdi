@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Gestione Aree Verdi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Sistema Gestione Aree Verdi Milano</h1>
+        </div>
+
+        <div class="dashboard">
+            <!-- Search Card -->
+            <div class="card">
+                <h3>
+                    Ricerca Aree Verdi
+                </h3>
+                <form id="searchForm">
+                    <div class="form-group">
+                        <label for="idLoc">ID Località</label>
+                        <input type="number" id="idLoc" name="idLoc" class="form-control" placeholder="Es. 1">
+                    </div>
+                    <div class="form-group">
+                        <label for="nome_loc">Nome Località</label>
+                        <input type="text" id="nome_loc" name="nome_loc" class="form-control" placeholder="Es. Parco Lambro">
+                    </div>
+                    <div class="form-group">
+                        <label for="zona">Zona</label>
+                        <select id="zona" name="zona" class="form-control">
+                            <option value="">Tutte le zone</option>
+                            <option value="1">1 - Centro Storico</option>
+                            <option value="2">2 - Stazione Centrale, Gorla, Turro, Greco, Crescenzago</option>
+                            <option value="3">3 - Città Studi, Lambrate, Venezia</option>
+                            <option value="4">4 - Vittoria, Forlanini</option>
+                            <option value="5">5 - Vigentino, Chiaravalle, Gratosoglio</option>
+                            <option value="6">6 - Barona, Lorenteggio</option>
+                            <option value="7">7 - Baggio, De Angeli, San Siro</option>
+                            <option value="8">8 - Fiera, Gallaratese, Quarto Oggiaro</option>
+                            <option value="9">9 - Porta Nuova, Isola, Bovisa, Dergano</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo">Tipo</label>
+                        <select id="tipo" name="tipo" class="form-control">
+                            <option value="">Tutti i tipi</option>
+                            <option value="Parco">Parco</option>
+                            <option value="Filare">Filare</option>
+                            <option value="Scuola">Scuola</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="area">Area</label>
+                        <input type="number" id="area" name="area" class="form-control" placeholder="Es. 12">
+                    </div>
+                    <div class="form-group">
+                        <label for="classificazione">Classificazione</label>
+                        <input type="text" id="classificazione" name="classificazione" class="form-control" placeholder="Es. Giardino">
+                    </div>
+                    <div class="form-group">
+                        <label for="affidatario">Affidatario</label>
+                        <select id="affidatario" name="affidatario" class="form-control">
+                            <option value="">Tutti gli affidatari</option>
+                            <option value="Appaltatore Servizio Manutenzione">Appaltatore Servizio Manutenzione</option>
+                            <option value="Operatore privato">Operatore privato</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="superficie_totale">Superficie Totale (mq)</label>
+                        <input type="number" id="superficie_totale" name="superficie_totale" class="form-control" min="0.01" step="0.01" placeholder="Es. 1313.85">
+                    </div>
+                    <div class="form-group">
+                        <label for="descrizione">Descrizione</label>
+                        <input type="text" id="descrizione" name="descrizione" class="form-control" placeholder="Cerca nella descrizione">
+                    </div>
+                    <div class="form-group">
+                        <label for="classificazione_istat">Classificazione ISTAT</label>
+                        <select id="classificazione_istat" name="classificazione_istat" class="form-control">
+                            <option value="">Tutte le classificazioni ISTAT</option>
+                            <option value="1 - Verde attrezzato">1 - Verde attrezzato</option>
+                            <option value="2 - Parchi urbani">2 - Parchi urbani</option>
+                            <option value="3 - Verde storico">3 - Verde storico</option>
+                            <option value="4 - Aree di arredo urbano">4 - Aree di arredo urbano</option>
+                            <option value="5a - Aree speciali - giardini scolastici">5a - Aree speciali - giardini scolastici</option>
+                            <option value="5b - Aree speciali - orti botanici e vivaio">5b - Aree speciali - orti botanici e vivaio</option>
+                            <option value="5d - Aree speciali - cimiteri urbani">5d - Aree speciali - cimiteri urbani</option>
+                            <option value="5f - Aree speciali - edifici pubblici">5f - Aree speciali - edifici pubblici</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">Cerca Aree</button>
+                    <button type="button" id="loadAll" class="btn">Carica Tutte</button>
+                </form>
+            </div>
+
+            <!-- Add New Area Card -->
+            <div class="card">
+                <h3>
+                    Aggiungi Nuova Area
+                </h3>
+                <form id="addForm">
+                    <div class="form-group">
+                        <label for="newIdLoc">ID Località</label>
+                        <input type="number" id="newIdLoc" name="idLoc" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newNomeLoc">Nome Località</label>
+                        <input type="text" id="newNomeLoc" name="nome_loc" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newZona">Zona</label>
+                        <select id="newZona" name="zona" class="form-control" required>
+                            <option value="">Seleziona zona</option>
+                            <option value="1">1 - Centro Storico</option>
+                            <option value="2">2 - Stazione Centrale, Gorla, Turro, Greco, Crescenzago</option>
+                            <option value="3">3 - Città Studi, Lambrate, Venezia</option>
+                            <option value="4">4 - Vittoria, Forlanini</option>
+                            <option value="5">5 - Vigentino, Chiaravalle, Gratosoglio</option>
+                            <option value="6">6 - Barona, Lorenteggio</option>
+                            <option value="7">7 - Baggio, De Angeli, San Siro</option>
+                            <option value="8">8 - Fiera, Gallaratese, Quarto Oggiaro</option>
+                            <option value="9">9 - Porta Nuova, Isola, Bovisa, Dergano</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="newTipo">Tipo</label>
+                        <select id="newTipo" name="tipo" class="form-control" required>
+                            <option value="">Seleziona tipo</option>
+                            <option value="Parco">Parco</option>
+                            <option value="Filare">Filare</option>
+                            <option value="Scuola">Scuola</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="newArea">Area</label>
+                        <input type="text" id="newArea" name="area" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newClassificazione">Classificazione</label>
+                        <input type="text" id="newClassificazione" name="classificazione" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newAffidatario">Affidatario</label>
+                        <select id="newAffidatario" name="affidatario" class="form-control" required>
+                            <option value="">Seleziona affidatario</option>
+                            <option value="Appaltatore Servizio Manutenzione">Appaltatore Servizio Manutenzione</option>
+                            <option value="Operatore privato">Operatore privato</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="newSuperficieTotale">Superficie Totale (mq)</label>
+                        <input type="number" id="newSuperficieTotale" name="superficie_totale" class="form-control" min="0.01" step="0.01" placeholder="Es. 1313.85" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newDescrizione">Descrizione</label>
+                        <textarea id="newDescrizione" name="descrizione" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="newClassificazioneIstat">Classificazione ISTAT</label>
+                        <select id="newClassificazioneIstat" name="classificazione_istat" class="form-control" required>
+                            <option value="">Seleziona classificazione ISTAT</option>
+                            <option value="1 - Verde attrezzato">1 - Verde attrezzato</option>
+                            <option value="2 - Parchi urbani">2 - Parchi urbani</option>
+                            <option value="3 - Verde storico">3 - Verde storico</option>
+                            <option value="4 - Aree di arredo urbano">4 - Aree di arredo urbano</option>
+                            <option value="5a - Aree speciali - giardini scolastici">5a - Aree speciali - giardini scolastici</option>
+			    <option value="5b - Aree speciali - orti botanici e vivaio">5b - Aree speciali - orti botanici e vivaio</option>
+                            <option value="5d - Aree speciali - cimiteri urbani">5d - Aree speciali - cimiteri urbani</option>
+		            <option value="5f - Aree speciali - edifici pubblici">5f - Aree speciali - edifici pubblici</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">Aggiungi Area</button>
+                </form>
+            </div>
+
+            <!-- Modify Area Card -->
+            <div class="card">
+                <h3>
+                    Modifica Area Esistente
+                </h3>
+                <div class="form-group">
+                    <label for="modifySearch">Cerca Area da Modificare</label>
+                    <input type="number" id="modifySearch" class="form-control" placeholder="Inserisci ID Località">
+                </div>
+                <button type="button" id="searchForModify" class="btn">Cerca Area</button>
+                
+                <div id="modifyAreaInfo" style="display: none; margin-top: 20px; padding-top: 20px; border-top: 2px solid #e2e8f0;">
+                    <h4 style="color: #4a5568; margin-bottom: 15px;">Area Trovata:</h4>
+                    <div id="foundAreaDetails" style="background: #f7fafc; padding: 15px; border-radius: 8px; margin-bottom: 15px;"></div>
+                    
+                    <form id="modifyForm">
+                        <input type="hidden" id="modifyIdLoc" name="idLoc">
+                        <div class="form-group">
+                            <label for="modifyNomeLoc">Nome Località</label>
+                            <input type="text" id="modifyNomeLoc" name="nome_loc" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="modifyZona">Zona</label>
+                            <select id="modifyZona" name="zona" class="form-control" required>
+                                <option value="">Seleziona zona</option>
+                                <option value="1">1 - Centro Storico</option>
+                                <option value="2">2 - Stazione Centrale, Gorla, Turro, Greco, Crescenzago</option>
+                                <option value="3">3 - Città Studi, Lambrate, Venezia</option>
+                                <option value="4">4 - Vittoria, Forlanini</option>
+                                <option value="5">5 - Vigentino, Chiaravalle, Gratosoglio</option>
+                                <option value="6">6 - Barona, Lorenteggio</option>
+                                <option value="7">7 - Baggio, De Angeli, San Siro</option>
+                                <option value="8">8 - Fiera, Gallaratese, Quarto Oggiaro</option>
+                                <option value="9">9 - Porta Nuova, Isola, Bovisa, Dergano</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="modifyTipo">Tipo</label>
+                            <select id="modifyTipo" name="tipo" class="form-control" required>
+                                <option value="">Seleziona tipo</option>
+                                <option value="Parco">Parco</option>
+                                <option value="Filare">Filare</option>
+                                <option value="Scuola">Scuola</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="modifyArea">Area</label>
+                            <input type="text" id="modifyArea" name="area" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="modifyClassificazione">Classificazione</label>
+                            <input type="text" id="modifyClassificazione" name="classificazione" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="modifyAffidatario">Affidatario</label>
+                            <select id="modifyAffidatario" name="affidatario" class="form-control" required>
+                                <option value="">Seleziona affidatario</option>
+                                <option value="Appaltatore Servizio Manutenzione">Appaltatore Servizio Manutenzione</option>
+                                <option value="Operatore privato">Operatore privato</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="modifySuperficieTotale">Superficie Totale (mq)</label>
+                            <input type="number" id="modifySuperficieTotale" name="superficie_totale" class="form-control" min="0.01" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="modifyDescrizione">Descrizione</label>
+                            <textarea id="modifyDescrizione" name="descrizione" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="modifyClassificazioneIstat">Classificazione ISTAT</label>
+                            <select id="modifyClassificazioneIstat" name="classificazione_istat" class="form-control" required>
+                                <option value="">Seleziona classificazione ISTAT</option>
+                                <option value="1 - Verde attrezzato">1 - Verde attrezzato</option>
+                                <option value="2 - Parchi urbani">2 - Parchi urbani</option>
+                                <option value="3 - Verde storico">3 - Verde storico</option>
+                                <option value="4 - Aree di arredo urbano">4 - Aree di arredo urbano</option>
+                                <option value="5a - Aree speciali - giardini scolastici">5a - Aree speciali - giardini scolastici</option>
+				<option value="5b - Aree speciali - orti botanici e vivaio">5b - Aree speciali - orti botanici e vivaio</option>
+                                <option value="5d - Aree speciali - cimiteri urbani">5d - Aree speciali - cimiteri urbani</option>
+				<option value="5f - Aree speciali - edifici pubblici">5f - Aree speciali - edifici pubblici</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button type="submit" class="btn">Salva Modifiche</button>
+                            <button type="button" id="cancelModify" class="btn">Annulla</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Delete Area Card -->
+            <div class="card">
+                <h3>
+                    Elimina Area
+                </h3>
+                <div class="form-group">
+                    <label for="deleteSearch">Cerca Area da Eliminare</label>
+                    <input type="number" id="deleteSearch" class="form-control" placeholder="Inserisci ID Località">
+                </div>
+                <button type="button" id="searchForDelete" class="btn">Cerca Area</button>
+                
+                <div id="deleteAreaInfo" style="display: none; margin-top: 20px; padding-top: 20px; border-top: 2px solid #e2e8f0;">
+                    <h4 style="color: #4a5568; margin-bottom: 15px;">Area da Eliminare:</h4>
+                    <div id="deleteAreaDetails" style="background: #fed7d7; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #e53e3e;"></div>
+                    <div style="background: #fff5f5; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #fed7d7;">
+                        <p style="color: #c53030; font-weight: 600; margin-bottom: 10px;">Attenzione!</p>
+                        <p style="color: #4a5568; margin-bottom: 0;">Questa operazione eliminerà definitivamente l'area verde selezionata. L'azione non può essere annullata.</p>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" id="confirmDelete" class="btn btn-danger">Elimina Definitivamente</button>
+                        <button type="button" id="cancelDelete" class="btn">Annulla</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div class="map-section">
+            <h3>
+                Mappa Aree Verdi - Milano
+            </h3>
+            <div class="map-controls">
+                <button id="centerMilan" class="btn">Centra su Milano</button>
+            </div>
+            <div id="map"></div>
+            <div class="map-legend">
+                <strong>Legenda:</strong>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #48bb78;"></div>
+                    <span>Parco</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ed8936;"></div>
+                    <span>Filare</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #9f7aea;"></div>
+                    <span>Scuola</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results">
+            <h3>Risultati</h3>
+            <div id="message"></div>
+            <div id="results"></div>
+            <div id="loadMoreContainer" style="display: none; text-align: center; margin-top: 20px;">
+                <button id="loadMoreResults" class="btn">Carica Altri Risultati</button>
+                <p id="resultsCounter" style="margin-top: 10px; color: #4a5568;"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

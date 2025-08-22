@@ -1,0 +1,56 @@
+[
+    {
+        "Zona": 1,
+        "Municipio": "Centro Storico",
+        "Lat": 45.4642,
+        "Lon": 9.19
+    },
+    {
+        "Zona": 2,
+        "Municipio": "Stazione Centrale, Gorla, Turro, Crescenzago",
+        "Lat": 45.4945,
+        "Lon": 9.2147
+    },
+    {
+        "Zona": 3,
+        "Municipio": "Città Studi, Lambrate, Porta Venezia",
+        "Lat": 45.4785,
+        "Lon": 9.224
+    },
+    {
+        "Zona": 4,
+        "Municipio": "Loreto, Niguarda, Bicocca, Precotto",
+        "Lat": 45.5195,
+        "Lon": 9.1976
+    },
+    {
+        "Zona": 5,
+        "Municipio": "Vigentino, Chiaravalle, Gratosoglio",
+        "Lat": 45.4215,
+        "Lon": 9.202
+    },
+    {
+        "Zona": 6,
+        "Municipio": "Barona, Lorenteggio, Giambellino",
+        "Lat": 45.4423,
+        "Lon": 9.139
+    },
+    {
+        "Zona": 7,
+        "Municipio": "Baggio, De Angeli, San Siro",
+        "Lat": 45.4723,
+        "Lon": 9.1206
+    },
+    {
+        "Zona": 8,
+        "Municipio": "Fiera, Gallaratese, Quarto Oggiaro",
+        "Lat": 45.502,
+        "Lon": 9.13
+    },
+    {
+        "Zona": 9,
+        "Municipio": "Porta Nuova, Isola, Bovisa, Dergano",
+        "Lat": 45.4955,
+        "Lon": 9.184
+    }
+]
